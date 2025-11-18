@@ -1,0 +1,33 @@
+# Terraform files
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# IDE
+.idea/
+*.swp
+*.swo
+*~
+.vscode/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+*.tfvars
+!*.tfvars.example
+!terraform.tfvars.example
+
+# Local SSH keys
+cluster-ssh-key
+cluster-ssh-key.pub

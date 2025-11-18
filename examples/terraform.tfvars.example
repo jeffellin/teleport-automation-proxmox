@@ -1,0 +1,12 @@
+# Proxmox Configuration
+proxmox_host     = "https://your-proxmox-host:8006/api2/json"
+proxmox_username = "root@pam"
+proxmox_password = "your-proxmox-password"
+proxmox_node     = "pve"
+
+# SSH Configuration
+ssh_public_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEv... your-ssh-public-key-here"
+
+# VM Configuration
+vm_password = "your-secure-password-here"
+username    = "ubuntu"
