@@ -7,6 +7,7 @@ module "httpbin_basic" {
   source = "../modules/httpbin-vm"
 
   vm_name        = "httpbin-basic"
+  vm_id          = 207
   ssh_public_key = var.ssh_public_key
 
   # Proxmox configuration
@@ -22,6 +23,11 @@ module "httpbin_basic" {
   cpu_cores = 2
   memory_mb = 4096
   disk_size = 30
+  storage_pool = "SSD_2TB_1"
+
+  # Network
+  vm_ip     = "192.168.1.207"
+  gateway_ip = "192.168.1.1"
 
   enable_teleport        = true
   teleport_proxy_address = var.teleport_proxy_address
@@ -47,6 +53,9 @@ module "httpbin_basic" {
 #
 #   vm_password = var.vm_password
 #   username    = var.username
+#
+#   # Optional: customize resources
+#   storage_pool = "SSD_TB_1"
 #
 #   # Teleport configuration
 #   enable_teleport        = true

@@ -8,7 +8,7 @@ terraform {
   }
 }
 
-resource "proxmox_virtual_environment_vm" "httpbin_vm" {
+resource "proxmox_virtual_environment_vm" "nginx_vm" {
   name      = var.vm_name
   node_name = var.proxmox_node
   vm_id     = var.vm_id
@@ -65,7 +65,7 @@ resource "proxmox_virtual_environment_vm" "httpbin_vm" {
     user_data_file_id = proxmox_virtual_environment_file.cloud_init.id
   }
 
-  tags = ["linux", "terraform", "httpbin"]
+  tags = ["linux", "terraform", "nginx"]
 }
 
 resource "proxmox_virtual_environment_file" "cloud_init" {
