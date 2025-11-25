@@ -34,7 +34,6 @@ if [ -z "$SSH_PUBLIC_KEY" ]; then
 fi
 
 echo "Successfully retrieved SSH public key"
-
 # Run terraform apply with the SSH public key
 echo "Running terraform apply..."
 terraform apply \

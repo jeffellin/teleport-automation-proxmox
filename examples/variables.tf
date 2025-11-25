@@ -38,3 +38,10 @@ variable "username" {
   type        = string
   default     = "ubuntu"
 }
+
+# Teleport Configuration
+variable "teleport_proxy_address" {
+  description = "Teleport proxy address (host only, no https://)"
+  type        = string
+  default     = ""
+}

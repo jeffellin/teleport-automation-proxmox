@@ -8,6 +8,10 @@ terraform {
       source  = "bpg/proxmox"
       version = ">= 0.40.0"
     }
+    teleport = {
+      source  = "terraform.releases.teleport.dev/gravitational/teleport"
+      version = "~> 17.0"
+    }
   }
 }
 

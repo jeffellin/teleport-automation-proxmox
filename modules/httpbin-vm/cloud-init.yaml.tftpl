@@ -1,0 +1,102 @@
+#cloud-config
+hostname: ${hostname}
+fqdn: ${hostname}.local
+
+users:
+  - name: ubuntu
+    ssh_authorized_keys:
+      - ${ssh_public_key}
+%{ if cluster_ssh_key != "# No cluster key" ~}
+      - ${cluster_ssh_key}
+%{ endif ~}
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    shell: /bin/bash
+
+%{ if cluster_ssh_private_key != "# No cluster key" ~}
+write_files:
+  - path: /home/ubuntu/.ssh/id_rsa
+    permissions: '0600'
+    owner: ubuntu:ubuntu
+    content: |
+      ${indent(6, cluster_ssh_private_key)}
+%{ endif ~}
+
+package_update: true
+package_upgrade: true
+
+packages:
+  - qemu-guest-agent
+  - curl
+  - wget
+  - git
+  - vim
+  - htop
+  - net-tools
+  - docker.io
+  - docker-compose
+  - jq
+
+runcmd:
+  # Enable and start qemu-guest-agent
+  - systemctl enable qemu-guest-agent
+  - systemctl start qemu-guest-agent
+  
+  # Configure Docker
+  - systemctl enable docker
+  - systemctl start docker
+  - usermod -aG docker ubuntu
+  
+  # Run httpbin container
+  - docker run -d --name=httpbin -p 80:80 --restart=always kennethreitz/httpbin
+  
+  # Wait for httpbin to be ready
+  - sleep 5
+  - docker ps
+%{ if enable_teleport ~}
+
+  # Get Teleport version from cluster
+  - export TELEPORT_DOMAIN="${teleport_proxy_address}"
+  - export TELEPORT_VERSION="$(curl -s https://$TELEPORT_DOMAIN/v1/webapi/find | jq -r '.server_version')"
+  - 'echo "Installing Teleport version: $TELEPORT_VERSION"'
+
+  # Install Teleport
+  - curl "https://${teleport_proxy_address}/scripts/install.sh" | bash
+  
+  # Configure Teleport
+  - |
+    cat <<EOF > /etc/teleport.yaml
+    version: v3
+    teleport:
+      data_dir: "/var/lib/teleport"
+      auth_token: "/tmp/teleport-token"
+      proxy_server: ${teleport_proxy_address}:443
+      log:
+        output: stderr
+        severity: INFO
+        format:
+          output: text
+    app_service:
+      enabled: true
+      apps:
+        - name: httpbin
+          uri: http://localhost:80
+          labels:
+            "teleport.dev/app": "httpbin"
+    ssh_service:
+      enabled: false
+    auth_service:
+      enabled: false
+    proxy_service:
+      enabled: false
+    EOF
+  
+  # Write Teleport token
+  - echo "${teleport_token}" > /tmp/teleport-token
+  - chmod 600 /tmp/teleport-token
+  
+  # Enable and start Teleport
+  - systemctl enable teleport
+  - systemctl start teleport
+%{ endif ~}
+
+final_message: "HTTPBin VM is ready! HTTPBin is available at http://${hostname}/"

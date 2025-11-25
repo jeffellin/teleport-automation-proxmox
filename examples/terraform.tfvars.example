@@ -10,3 +10,7 @@ ssh_public_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEv... your-ssh-public-key
 # VM Configuration
 vm_password = "your-secure-password-here"
 username    = "ubuntu"
+
+# Teleport Configuration
+teleport_proxy_address = "teleport.example.com"
+teleport_version       = "17.0.0"
