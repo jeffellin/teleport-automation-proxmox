@@ -23,8 +23,8 @@ module "web_server" {
   source = "../modules/linux-vm"
 
   vm_name        = "web-server"
-  vm_id          = 200
-  vm_ip          = "192.168.1.10"
+  vm_id          = 251
+  vm_ip          = "192.168.1.251"
   ssh_public_key = var.ssh_public_key
   gateway_ip     = "192.168.1.1"
 
@@ -48,8 +48,8 @@ module "database_server" {
   source = "../modules/linux-vm"
 
   vm_name        = "database-server"
-  vm_id          = 201
-  vm_ip          = "192.168.1.11"
+  vm_id          = 252
+  vm_ip          = "192.168.1.252"
   ssh_public_key = var.ssh_public_key
   gateway_ip     = "192.168.1.1"
 
@@ -73,8 +73,8 @@ module "monitoring_server" {
   source = "../modules/linux-vm"
 
   vm_name        = "monitoring-server"
-  vm_id          = 202
-  vm_ip          = "192.168.1.12"
+  vm_id          = 253
+  vm_ip          = "192.168.1.253"
   ssh_public_key = var.ssh_public_key
   gateway_ip     = "192.168.1.1"
 
