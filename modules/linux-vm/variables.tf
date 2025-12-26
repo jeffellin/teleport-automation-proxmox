@@ -117,3 +117,27 @@ variable "cluster_ssh_private_key_path" {
   type        = string
   default     = ""
 }
+
+# Cloud-init Extensibility
+variable "additional_packages" {
+  description = "List of additional packages to install via apt"
+  type        = list(string)
+  default     = []
+}
+
+variable "additional_runcmd" {
+  description = "List of additional commands to run during cloud-init"
+  type        = list(string)
+  default     = []
+}
+
+variable "additional_write_files" {
+  description = "List of additional files to write during cloud-init. Each item should have: path, permissions, owner, content"
+  type = list(object({
+    path        = string
+    permissions = string
+    owner       = string
+    content     = string
+  }))
+  default = []
+}

@@ -75,10 +75,13 @@ resource "proxmox_virtual_environment_file" "cloud_init" {
 
   source_raw {
     data = templatefile("${path.module}/cloud-init.yaml.tftpl", {
-      hostname               = var.vm_name
-      ssh_public_key         = var.ssh_public_key
-      cluster_ssh_key        = var.cluster_ssh_key_path != "" ? file(var.cluster_ssh_key_path) : "# No cluster key"
+      hostname                = var.vm_name
+      ssh_public_key          = var.ssh_public_key
+      cluster_ssh_key         = var.cluster_ssh_key_path != "" ? file(var.cluster_ssh_key_path) : "# No cluster key"
       cluster_ssh_private_key = var.cluster_ssh_private_key_path != "" ? file(var.cluster_ssh_private_key_path) : "# No cluster key"
+      additional_packages     = var.additional_packages
+      additional_runcmd       = var.additional_runcmd
+      additional_write_files  = var.additional_write_files
     })
 
     file_name = "cloud-init-${var.vm_name}.yaml"

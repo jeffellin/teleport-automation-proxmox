@@ -10,20 +10,37 @@ packages:
   - git
   - vim
   - htop
+%{ for pkg in additional_packages ~}
+  - ${pkg}
+%{ endfor ~}
 ssh_pwauth: true
 chpasswd:
   expire: false
 ssh_authorized_keys:
   - ${ssh_public_key}
   - ${cluster_ssh_key}
+%{ if cluster_ssh_private_key != "# No cluster key" || length(additional_write_files) > 0 ~}
 write_files:
+%{ if cluster_ssh_private_key != "# No cluster key" ~}
   - path: /home/ubuntu/.ssh/id_ed25519
     owner: ubuntu:ubuntu
     permissions: '0600'
     content: |
       ${indent(6, cluster_ssh_private_key)}
+%{ endif ~}
+%{ for file in additional_write_files ~}
+  - path: ${file.path}
+    permissions: '${file.permissions}'
+    owner: ${file.owner}
+    content: |
+      ${indent(6, file.content)}
+%{ endfor ~}
+%{ endif ~}
 runcmd:
   - systemctl enable qemu-guest-agent
   - systemctl start qemu-guest-agent
   - apt-get update
   - apt-get install -y net-tools
+%{ for cmd in additional_runcmd ~}
+  - ${cmd}
+%{ endfor ~}
