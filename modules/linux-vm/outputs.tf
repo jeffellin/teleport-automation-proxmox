@@ -22,3 +22,13 @@ output "ssh_command" {
   description = "SSH command to connect to the VM"
   value       = "ssh -i /path/to/private-key ${var.username}@${var.vm_ip}"
 }
+
+output "teleport_enabled" {
+  description = "Whether Teleport is enabled"
+  value       = var.enable_teleport
+}
+
+output "teleport_node_name" {
+  description = "Teleport node name"
+  value       = var.enable_teleport ? (var.teleport_node_name != "" ? var.teleport_node_name : var.vm_name) : null
+}

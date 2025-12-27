@@ -141,3 +141,37 @@ variable "additional_write_files" {
   }))
   default = []
 }
+
+# Teleport Configuration
+variable "enable_teleport" {
+  description = "Whether to enable Teleport agent installation"
+  type        = bool
+  default     = false
+}
+
+variable "teleport_proxy_address" {
+  description = "Teleport proxy address (e.g., ellinj.teleport.sh)"
+  type        = string
+  default     = ""
+}
+
+variable "teleport_token" {
+  description = "Teleport join token for the agent"
+  type        = string
+  default     = ""
+  sensitive   = true
+}
+
+variable "teleport_node_name" {
+  description = "Custom node name (defaults to vm_name)"
+  type        = string
+  default     = ""
+}
+
+variable "teleport_node_labels" {
+  description = "Labels for the Teleport node"
+  type        = map(string)
+  default     = {
+    env = "homelab"
+  }
+}

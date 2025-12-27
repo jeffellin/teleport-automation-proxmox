@@ -44,3 +44,51 @@ runcmd:
 %{ for cmd in additional_runcmd ~}
   - ${cmd}
 %{ endfor ~}
+%{ if enable_teleport ~}
+  # Install Teleport
+  - echo "Installing Teleport agent..."
+  - curl "https://${teleport_proxy_address}/scripts/install.sh" | bash
+
+  # Write Teleport token
+  - echo "${teleport_token}" > /tmp/teleport-token
+  - chmod 600 /tmp/teleport-token
+
+  # Configure Teleport
+  - |
+    cat <<'TELEPORT_EOF' > /etc/teleport.yaml
+    version: v3
+    teleport:
+      nodename: ${teleport_node_name}
+      data_dir: /var/lib/teleport
+      auth_token: /tmp/teleport-token
+      proxy_server: ${teleport_proxy_address}:443
+      log:
+        output: stderr
+        severity: INFO
+        format:
+          output: text
+    ssh_service:
+      enabled: true
+      labels:
+%{ for key, value in teleport_node_labels ~}
+        ${key}: "${value}"
+%{ endfor ~}
+      commands:
+        - name: hostname
+          command: [hostname]
+          period: 1m0s
+    app_service:
+      enabled: false
+    db_service:
+      enabled: false
+    auth_service:
+      enabled: false
+    proxy_service:
+      enabled: false
+    TELEPORT_EOF
+
+  # Enable and start Teleport
+  - systemctl enable teleport
+  - systemctl start teleport
+  - echo "Teleport agent installation complete"
+%{ endif ~}

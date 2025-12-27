@@ -82,6 +82,12 @@ resource "proxmox_virtual_environment_file" "cloud_init" {
       additional_packages     = var.additional_packages
       additional_runcmd       = var.additional_runcmd
       additional_write_files  = var.additional_write_files
+      # Teleport variables
+      enable_teleport        = var.enable_teleport
+      teleport_proxy_address = var.teleport_proxy_address
+      teleport_token         = var.teleport_token
+      teleport_node_name     = var.teleport_node_name != "" ? var.teleport_node_name : var.vm_name
+      teleport_node_labels   = var.teleport_node_labels
     })
 
     file_name = "cloud-init-${var.vm_name}.yaml"
