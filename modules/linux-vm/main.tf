@@ -62,14 +62,14 @@ resource "proxmox_virtual_environment_vm" "linux_vm" {
       }
     }
 
-    user_data_file_id = var.custom_user_data_file_id != "" ? var.custom_user_data_file_id : proxmox_virtual_environment_file.cloud_init[0].id
+    user_data_file_id = var.custom_user_data_file_id != null ? var.custom_user_data_file_id : proxmox_virtual_environment_file.cloud_init[0].id
   }
 
   tags = ["linux", "terraform"]
 }
 
 resource "proxmox_virtual_environment_file" "cloud_init" {
-  count = var.custom_user_data_file_id == "" ? 1 : 0
+  count = var.custom_user_data_file_id == null ? 1 : 0
 
   content_type = "snippets"
   datastore_id = var.snippets_storage

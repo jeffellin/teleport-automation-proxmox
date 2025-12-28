@@ -180,5 +180,5 @@ variable "teleport_node_labels" {
 variable "custom_user_data_file_id" {
   description = "Optional custom user data file ID to override the default cloud-init template. If provided, the module will use this instead of generating its own cloud-init configuration."
   type        = string
-  default     = ""
+  default     = null
 }
